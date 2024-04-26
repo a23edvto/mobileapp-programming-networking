@@ -1,42 +1,51 @@
+Först så forkades projektet "Networking" som länkats i uppgiftsbeskrivningen. 
+Efter det skapades en "RecyclerWiew" till min layout fil "activity_main":
 
-# Rapport
+<androidx.recyclerview.widget.RecyclerView
+android:id="@+id/recycler_view"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintLeft_toLeftOf="parent"
+app:layout_constraintRight_toRightOf="parent"
+app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-**Skriv din rapport här!**
+Efter det lades det till en ArrayList<Mountain> och en RecyclerView.Adapter. Dessa skrevs
+Såhär:
 
-_Du kan ta bort all text som finns sedan tidigare_.
+ArrayList<Mountain> mountain = new ArrayList<Mountain>();
 
-## Följande grundsyn gäller dugga-svar:
+RecyclerViewAdapter adapter;
 
-- Ett kortfattat svar är att föredra. Svar som är längre än en sida text (skärmdumpar och programkod exkluderat) är onödigt långt.
-- Svaret skall ha minst en snutt programkod.
-- Svaret skall inkludera en kort övergripande förklarande text som redogör för vad respektive snutt programkod gör eller som svarar på annan teorifråga.
-- Svaret skall ha minst en skärmdump. Skärmdumpar skall illustrera exekvering av relevant programkod. Eventuell text i skärmdumpar måste vara läsbar.
-- I de fall detta efterfrågas, dela upp delar av ditt svar i för- och nackdelar. Dina för- respektive nackdelar skall vara i form av punktlistor med kortare stycken (3-4 meningar).
+Efter detta Skapade jag två nya klasser som hette "Mountain" och "RecyclerViewAdapter".
 
-Programkod ska se ut som exemplet nedan. Koden måste vara korrekt indenterad då den blir lättare att läsa vilket gör det lättare att hitta syntaktiska fel.
+I mountainklassen skapades bland annat en variabel med datatypen string och identifieraren
+"name".
 
-```
-function errorCallback(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            // Geolocation API stöds inte, gör något
-            break;
-        case error.POSITION_UNAVAILABLE:
-            // Misslyckat positionsanrop, gör något
-            break;
-        case error.UNKNOWN_ERROR:
-            // Okänt fel, gör något
-            break;
-    }
-}
-```
+Efter detta användes getJson() för att ladda ner datan från json filen. Samt att URLen 
+ändrades till den url som tillhör jsonfilen:
 
-Bilder läggs i samma mapp som markdown-filen.
+private final String JSON_URL = "https://mobprog.webug.se/json-api?login=brom";
 
-![](android.png)
+Efter detta använde jag toString() som jag overridade för att få namnen på bergen till
+strings. När jag sedan testade appen visades inga berg och det märktes att det inte
+några berg i variabeln mountains. Efter mycket debuggande märktes det att felet fanns i
+denna rad:
 
-Läs gärna:
+Toast.makeText(MainActivity.this, item.toString(), Toast.LENGTH_SHORT).show();
 
-- Boulos, M.N.K., Warren, J., Gong, J. & Yue, P. (2010) Web GIS in practice VIII: HTML5 and the canvas element for interactive online mapping. International journal of health geographics 9, 14. Shin, Y. &
-- Wunsche, B.C. (2013) A smartphone-based golf simulation exercise game for supporting arthritis patients. 2013 28th International Conference of Image and Vision Computing New Zealand (IVCNZ), IEEE, pp. 459–464.
-- Wohlin, C., Runeson, P., Höst, M., Ohlsson, M.C., Regnell, B., Wesslén, A. (2012) Experimentation in Software Engineering, Berlin, Heidelberg: Springer Berlin Heidelberg.
+Där jag innan hade skrivit "getName" istället för "toString" Detta ledde till att
+den aldrig hämtade stringvärderna som hade skapats.
+
+Tyvärr visades bara tra av de fyra bergen som skulle visas på skärmen, anledningen var
+att nu hade Json filen kommit in men inte json URLen. Då skrevs denna kod i MainActivity:
+
+new JsonTask(this).execute(JSON_URL);
+
+Tyvärr gjorde detta inte så att listan uppdaterades med alla berg och den såg likadan
+ut som förut. Jag testade då att flytta runt de olika kodraderna i MainActivity men det
+fungerade inte. Jag kom då till slutsatsen att det var en racecondition som gjorde 
+att listan inte uppdaterades korrekt.
+
+![img.png](img.png)
