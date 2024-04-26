@@ -34,8 +34,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
         new JsonFile(this, this).execute(JSON_FILE);
         //new JsonTask(this).execute(JSON_URL);
-
-
+        
         for(Mountain m : mountain){
             Log.d("MainActivity===>", "" + m.toString());
         }
@@ -51,7 +50,9 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         view.setLayoutManager(new LinearLayoutManager(this));
         view.setAdapter(adapter);
 
-        adapter.notifyDataSetChanged();
+
+
+        //adapter.notifyDataSetChanged();
     }
 
     @Override
